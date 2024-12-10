@@ -17,4 +17,28 @@ res.status(200).json({message:"Successfully added"})
     }
 })
 
+taskRouter.get('/', async(req, res)=>{
+    try{
+const task=await Task.find()
+res.status(200).json(task)
+    }
+    catch(err){
+        res.status(400).json({error:"Could not get data"})
+    }
+})
+
+taskRouter.delete('/:id', async(req, res)=>{
+    const {id}=req.params
+    try{
+       
+const task=await Task.findByIdAndDelete(id)
+if(!task){
+         return res.status(403).json({error:"Could not find the task for deletion"}) 
+}
+res.status(200).json({message: 'Task Deleted successfully'})
+    }catch(err){
+res.status(400)
+    }
+})
+
 module.exports=taskRouter

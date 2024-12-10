@@ -56,3 +56,25 @@ flex-direction: column;
 gap:50px;
 margin:10px 0;
 `
+
+export const CardLayout=styled.div`
+display: grid;
+border:1px solid black;
+border-radius:50px;
+grid-template-columns: 2fr 1fr;
+grid-gap:10px;
+font-size:24px;
+font-family: Motiva Sans;
+`
+
+export const Title=styled.h3`
+margin:0;
+`
+
+export const Description=styled.div`
+
+`
+
+export const CheckBox=styled.div`
+
+`

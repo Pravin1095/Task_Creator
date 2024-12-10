@@ -5,7 +5,9 @@ const Schema=mongoose.Schema
 const taskSchema=new Schema({
     title:{type:String,required:true},
     description:{type:String},
-    isCompleted:{type:Boolean}
+    isCompleted:{type:Boolean},
+    dateCreated:{ type: Date, default: Date.now }, // Automatically set to the current date
+
 })
 
 // const Task=mongoose.model('Task', taskSchema)
