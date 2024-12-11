@@ -27,6 +27,24 @@ res.status(200).json(task)
     }
 })
 
+taskRouter.patch('/:id',async(req, res)=>{
+    const {id}=req.params
+    const {title, description}=req.body
+    try{
+    const task=await Task.findByIdAndUpdate(id,{
+        title: title,
+        description: description
+    })
+    if(!task){
+        res.status(403).json({error:"Could not find the id of the task"})
+    }
+    res.status(200).json({messsage:"Task Updated successfully"})
+    }
+    catch(err){
+res.status(400).json(err)
+    }
+})
+
 taskRouter.delete('/:id', async(req, res)=>{
     const {id}=req.params
     try{

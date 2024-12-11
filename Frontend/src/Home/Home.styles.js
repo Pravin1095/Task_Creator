@@ -78,3 +78,9 @@ export const Description=styled.div`
 export const CheckBox=styled.div`
 
 `
+
+export const EditTitle=styled.h3`
+${'' /* margin:0; */}
+margin-left:20px;
+text-align:left;
+`

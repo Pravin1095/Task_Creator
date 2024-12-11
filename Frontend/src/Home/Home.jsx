@@ -5,6 +5,7 @@ import {
   CardLayout,
   CheckBox,
   Description,
+  EditTitle,
   InputElement,
   InputWrapper,
   Tab,
@@ -21,6 +22,7 @@ const Home = () => {
   const [taskData, setTaskData]=useState('')
   const [title, setTitle]=useState('')
   const [desc, setDesc]=useState('')
+  const [isEditId, setIsEditId]=useState('')
   const titleRef=useRef('')
   const descRef=useRef('')
 
@@ -68,15 +70,26 @@ console.log('title', 'description', titleRef.current, descRef.current)
     // titleRef.current=''
     // descRef.current=''
     try{
+      if(isEditId){
+const res=await axios.patch(`${url}/${isEditId}`,{title:titleRef.current,description:descRef.current} )
+alert("Task Updated successfully")
+setIsEditId('')
+      }
+      else{
 const res=await axios.post(`${url}`,{title: titleRef.current, description: descRef.current, isCompleted: false})
 alert('Task added successfully')
-setTitle('')
+
+      }
+      setTitle('')
 setDesc('')
+titleRef.current=''
+    descRef.current=''
 // e.target.reset()
 handleGetTaskData()
     }
     catch(err){
 console.err('Post error', err)
+setIsEditId('')
     }
   };
 
@@ -112,6 +125,19 @@ catch(err){
 console.error('Delete axios route', err)
 }
   }
+
+  const handleEdit = (id, titleToEdit, DescToEdit) => {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+    setTitle(titleToEdit)
+    setDesc(DescToEdit)
+    titleRef.current=titleToEdit
+    descRef.current=DescToEdit
+    setIsEditId(id)
+};
+
   return (
     <>
       <header>
@@ -119,6 +145,7 @@ console.error('Delete axios route', err)
       </header>
       <BodyLayout>
         <form onSubmit={(e) => handleSubmit(e)}>
+        {isEditId && <EditTitle>Edit your task</EditTitle>}
           <InputWrapper>
             <InputElement
               name="title"
@@ -167,7 +194,7 @@ console.error('Delete axios route', err)
             <span>
               <GrEdit />
             </span>
-            <Link>Edit</Link>
+            <Link onClick={()=>handleEdit(data._id, data.title,data.description)}>Edit</Link>
           </div>
           <div>Date Added :{formatDate(data.dateCreated)} </div>
           <div>
