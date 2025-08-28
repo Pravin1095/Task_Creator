@@ -28,7 +28,7 @@ const Home = () => {
 
 
 
-  const url=process.env.REACT_APP_API_URL
+  const url=`${process.env.REACT_APP_API_URL}/api/tasks`
   useEffect(()=>{
 handleGetTaskData()
   },[])
