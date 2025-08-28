@@ -29,6 +29,9 @@ const Home = () => {
 
 
   const url=`${process.env.REACT_APP_API_URL}/api/tasks`
+
+  console.log("check url in prod", url)
+
   useEffect(()=>{
 handleGetTaskData()
   },[])
