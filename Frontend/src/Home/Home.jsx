@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import {
   AddButton,
   BodyLayout,
@@ -6,15 +6,18 @@ import {
   CheckBox,
   Description,
   EditTitle,
+  FormWrapper,
   InputElement,
   InputWrapper,
   Tab,
   TabButton,
   Title,
-} from "./Home.styles";
+} from "./HomeV2.styles";
+import Modal from "../common/Modal";
 import { GrEdit } from "react-icons/gr";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { Link } from "react-router-dom";
+import { myContext } from "../ContextProvider/MyProvider";
 import axios from 'axios'
 
 const Home = () => {
@@ -23,9 +26,11 @@ const Home = () => {
   const [title, setTitle]=useState('')
   const [desc, setDesc]=useState('')
   const [isEditId, setIsEditId]=useState('')
+  // const [openModal, setOpenModal]=useState(false)
   const titleRef=useRef('')
   const descRef=useRef('')
 
+  const {openModal, updateModalState}=useContext(myContext)
 
   const url='http://localhost:8000/api/tasks'
 
@@ -88,7 +93,7 @@ titleRef.current=''
 handleGetTaskData()
     }
     catch(err){
-console.err('Post error', err)
+console.error('Post error', err)
 setIsEditId('')
     }
   };
@@ -124,6 +129,8 @@ handleGetTaskData()
 catch(err){
 console.error('Delete axios route', err)
 }
+// updateModalState(true)
+
   }
 
   const handleEdit = (id, titleToEdit, DescToEdit) => {
@@ -140,13 +147,13 @@ console.error('Delete axios route', err)
 
   return (
     <>
+    {openModal && <Modal/>}
       <header>
         <h1>Task Creator</h1>
       </header>
       <BodyLayout>
-        <form onSubmit={(e) => handleSubmit(e)}>
+      <FormWrapper onSubmit={(e) => handleSubmit(e)}>
         {isEditId && <EditTitle>Edit your task</EditTitle>}
-          <InputWrapper>
             <InputElement
               name="title"
               placeholder="Add title"
@@ -160,8 +167,7 @@ console.error('Delete axios route', err)
             value={desc}
              />
             <AddButton type="submit">Add Task</AddButton>
-          </InputWrapper>
-        </form>
+        </FormWrapper>
 
         <Tab>
           <TabButton

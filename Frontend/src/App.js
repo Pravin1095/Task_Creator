@@ -3,24 +3,24 @@ import {
   BrowserRouter as Router,
   Route,
   Navigate,
-  Routes
+  Routes,
 } from 'react-router-dom';
 import './App.css';
 import Home from './Home/Home';
+import AuthPage from './Auth/Auth';
+
 
 function App() {
   return (
     <div className="App">
     <Router>
       <Routes>
-        <Route path='/' element={<Home />}>
+      <Route exact path = '/' element={<Navigate to='/auth' />} />
 
-        </Route>
-        <Route path='/view'>
-          {/* <View /> */}
-        </Route>
+        <Route path='/home' element={<Home />} />
+        <Route path = '/auth' element={<AuthPage />} />
+
         <Route path="*" element={<Navigate to="/" />} /> 
-        {/* if we have any other undefined routes(*) it automatically navigates to home route (/) */}
       </Routes>
     </Router>
     </div>

@@ -3,10 +3,12 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 // import reportWebVitals from './reportWebVitals';
+import { MyProvider } from './ContextProvider/MyProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <App />
+    <MyProvider><App /></MyProvider>
+  
 );
 
 // If you want to start measuring performance in your app, pass a function
