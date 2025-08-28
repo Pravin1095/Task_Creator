@@ -27,8 +27,8 @@ const Home = () => {
   const descRef=useRef('')
 
 
-  const url='http://localhost:8000/api/tasks'
 
+  const url=process.env.REACT_APP_API_URL
   useEffect(()=>{
 handleGetTaskData()
   },[])
