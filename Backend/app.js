@@ -3,6 +3,7 @@ const app=express()
 const bodyParser=require('body-parser')
 const mongoose=require('mongoose')
 const taskRouter=require('./routes/taskRouter')
+const authRouter = require('./routes/authRouter')
 
 const url='mongodb://apravin3210:DsqSJ25icfkvuU82@cluster0-shard-00-00.2nuld.mongodb.net:27017,cluster0-shard-00-01.2nuld.mongodb.net:27017,cluster0-shard-00-02.2nuld.mongodb.net:27017/?ssl=true&replicaSet=atlas-3plmxc-shard-0&authSource=admin&retryWrites=true&w=majority&appName=Cluster0'
 
@@ -19,6 +20,7 @@ app.use((req, res, next)=>{
 })
 
 app.use('/api/tasks', taskRouter)
+app.use('/api/users', authRouter)
 
 mongoose.connect(url).then(()=>{
     console.log("Connection successful")

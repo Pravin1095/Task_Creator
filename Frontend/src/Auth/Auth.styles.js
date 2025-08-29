@@ -3,8 +3,10 @@ import styled from "styled-components";
 export const PageContainer = styled.div`
   min-height: 100vh;
   display: flex;
+  flex-direction : column;
   justify-content: center;
   align-items: center;
+  gap : 20px;
   background: linear-gradient(135deg, #0f0f0f, #1a1a1a, #111827);
   color: #fff;
 `;

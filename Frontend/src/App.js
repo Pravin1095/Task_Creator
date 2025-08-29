@@ -17,7 +17,7 @@ function App() {
       <Routes>
       <Route exact path = '/' element={<Navigate to='/auth' />} />
 
-        <Route path='/home' element={<Home />} />
+        <Route path='/home/:id' element={<Home />} />
         <Route path = '/auth' element={<AuthPage />} />
 
         <Route path="*" element={<Navigate to="/" />} /> 
