@@ -2,22 +2,24 @@ import React, { useState, useRef, useEffect, useContext } from "react";
 import {
   AddButton,
   BodyLayout,
-  CardLayout,
-  CheckBox,
-  Description,
+  
+  
   EditTitle,
   FormWrapper,
   InputElement,
   InputWrapper,
   Tab,
   TabButton,
-  Title,
+ 
 } from "./HomeV2.styles";
+import {CardLayout, Title, CheckBox, Description,} from "./Home.styles"
+import { useParams } from "react-router-dom";
 import Modal from "../common/Modal";
 import { GrEdit } from "react-icons/gr";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { myContext } from "../ContextProvider/MyProvider";
+import { AuthContext } from "../common/AuthContext";
 import axios from 'axios'
 
 const Home = () => {
@@ -31,16 +33,26 @@ const Home = () => {
   const descRef=useRef('')
 
   const {openModal, updateModalState}=useContext(myContext)
+  const auth = useContext(AuthContext);
 
   const url='http://localhost:8000/api/tasks'
 
+const {userId} = useParams()
+
+
+  console.log("check id", userId, auth.token);
   useEffect(()=>{
+    if(!auth.token){
+      
+    }
 handleGetTaskData()
-  },[])
+  },[auth.token])
 
   const handleGetTaskData=async()=>{
     try{
-    const res=await axios.get(`${url}`)
+    const res=await axios.get(`${url}/${userId}`, {
+      headers: { Authorization: `Bearer ${auth.token}` }
+    })
     setTaskData(res.data)
     }
     catch(err){
@@ -76,12 +88,16 @@ console.log('title', 'description', titleRef.current, descRef.current)
     // descRef.current=''
     try{
       if(isEditId){
-const res=await axios.patch(`${url}/${isEditId}`,{title:titleRef.current,description:descRef.current} )
+const res=await axios.patch(`${url}/${isEditId}`,{title:titleRef.current,description:descRef.current}, {
+      headers: { Authorization: `Bearer ${auth.token}` }
+    } )
 alert("Task Updated successfully")
 setIsEditId('')
       }
       else{
-const res=await axios.post(`${url}`,{title: titleRef.current, description: descRef.current, isCompleted: false})
+const res=await axios.post(`${url}`,{title: titleRef.current, description: descRef.current, isCompleted: false, userId : userId},{
+      headers: { Authorization: `Bearer ${auth.token}` }
+    })
 alert('Task added successfully')
 
       }
@@ -121,7 +137,9 @@ else{
 
   const handleDelete=async(id)=>{
 try{
-const res=await axios.delete(`${url}/${id}`)
+const res=await axios.delete(`${url}/${id}`, {
+      headers: { Authorization: `Bearer ${auth.token}` }
+    })
 console.log('res delete', res)
 alert(res.data.message)
 handleGetTaskData()
@@ -200,14 +218,14 @@ console.error('Delete axios route', err)
             <span>
               <GrEdit />
             </span>
-            <Link onClick={()=>handleEdit(data._id, data.title,data.description)}>Edit</Link>
+            <Link color="white" onClick={()=>handleEdit(data._id, data.title,data.description)}>Edit</Link>
           </div>
           <div>Date Added :{formatDate(data.dateCreated)} </div>
           <div>
             <span>
               <RiDeleteBin5Line />
             </span>
-            <Link onClick={()=>handleDelete(data._id)}>Delete</Link>
+            <Link color="white" onClick={()=>handleDelete(data._id)}>Delete</Link>
           </div>
         </CardLayout>
       })  }

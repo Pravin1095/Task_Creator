@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {useNavigate} from 'react-router-dom'
 import { PageContainer, Card, Title, Form, Heading,Input, Button, ToggleText, ToggleButton } from "./Auth.styles";
 import axios from "axios";
 import NotificationBubble from "../common/NotificationBubble";
+import { AuthContext } from "../common/AuthContext";
 
 export default function AuthPage() {
   const [isSignIn, setIsSignIn] = useState(true);
@@ -10,9 +11,12 @@ export default function AuthPage() {
   const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate()
 
+   const auth = useContext(AuthContext);
 
    const url='http://localhost:8000/api/users'
 
+
+  
  const validateUsername = (name) => /^[a-zA-Z0-9_]{3,15}$/.test(name);
 
   const handleChange = (e)=>{
@@ -42,9 +46,13 @@ setFormData((prevData)=>{
     try{
 const res =await axios.post(`${url}`, formData)
 if(res.status===201){
-navigate(`/home/${res.data.userId}`)
+  console.log("check res", res, res.data, auth.token)
+  auth.login(res?.data?.userId, res?.data?.token)
+     console.log("check auth token", auth.token, res?.data?.userId)
+navigate(`/home/${res?.data?.userId}`)
+
+
 }
-console.log("Success", res)
     }
     catch(err){
       setErrorMsg(err.response.data.message)
@@ -53,9 +61,6 @@ console.log("Success", res)
     
   }
 
-
-
-  console.log("check formData", formData);
   return (
     <PageContainer>
     {errorMsg && <NotificationBubble>{errorMsg}</NotificationBubble>}

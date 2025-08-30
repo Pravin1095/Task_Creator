@@ -60,6 +60,7 @@ margin:10px 0;
 export const CardLayout=styled.div`
 display: grid;
 border:1px solid black;
+background: grey;
 border-radius:50px;
 grid-template-columns: 2fr 1fr;
 grid-gap:10px;
@@ -72,7 +73,7 @@ margin:0;
 `
 
 export const Description=styled.div`
-
+color: #d1d5db;
 `
 
 export const CheckBox=styled.div`
