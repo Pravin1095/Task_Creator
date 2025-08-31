@@ -1,24 +1,36 @@
-import React, {useContext} from "react";
-import { Button, ButtonLayout, ModalContent, ModalLayout } from "./Modal.styles";
-import { Link } from "react-router-dom";
-import { myContext } from "../ContextProvider/MyProvider";
+import React from "react";
+import { 
+  Overlay, 
+  ModalWrapper, 
+  ModalHeader, 
+  ModalBody, 
+  CloseButton, 
+  ButtonLayout
+} from "./Modal.styles";
+import { X } from "lucide-react"; // optional: using lucide icon for close
+import { Button } from "../Auth/Auth.styles";
 
+const Modal = ({ isOpen, onClose, title, primaryButtonText, secondaryButtonText, primaryButtonHandler }) => {
+  if (!isOpen) return null;
 
-const Modal=()=>{
-const {openModal, updateModalState}=useContext(myContext)
-    const closeModal=()=>{
-        updateModalState(false)
-    }
-    console.log('Check modal state', openModal)
-    
-    return   <ModalLayout>
-<ModalContent>Check Modal</ModalContent>
-<ButtonLayout>
-<Link onClick={()=>closeModal}>Yes</Link>
-<Button onClick={()=>closeModal}>No</Button>
-</ButtonLayout>
-        </ModalLayout>
-    
-}
+  return (
+    <Overlay onClick={onClose}>
+      <ModalWrapper onClick={(e) => e.stopPropagation()}>
+        <ModalHeader>
+          <h2>{title}</h2>
+          <CloseButton onClick={onClose}>
+            <X size={20} />
+          </CloseButton>
+        </ModalHeader>
+        <ModalBody>
+        <ButtonLayout>
+          <Button onClick={primaryButtonHandler}>{primaryButtonText}</Button>
+          <Button onClick={onClose}>{secondaryButtonText}</Button>
+          </ButtonLayout>
+        </ModalBody>
+      </ModalWrapper>
+    </Overlay>
+  );
+};
 
-export default Modal
+export default Modal;

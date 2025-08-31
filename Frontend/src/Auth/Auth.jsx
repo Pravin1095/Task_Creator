@@ -47,7 +47,7 @@ setFormData((prevData)=>{
 const res =await axios.post(`${url}`, formData)
 if(res.status===201){
   console.log("check res", res, res.data, auth.token)
-  auth.login(res?.data?.userId, res?.data?.token)
+  auth.login(res?.data?.userId, res?.data?.token, res?.data?.userName)
      console.log("check auth token", auth.token, res?.data?.userId)
 navigate(`/home/${res?.data?.userId}`)
 
@@ -78,6 +78,7 @@ navigate(`/home/${res?.data?.userId}`)
           <Form onSubmit={(e)=>handleSubmit(e)}>
             <Heading>Sign Up</Heading>
             <Input required={true} value={formData.userName ?? ''} onChange={(e)=>handleChange(e)} name='userName' type="text" placeholder="Full Name" />
+            <Input required={true} value={formData.organization ?? ''} onChange={(e)=>handleChange(e)} name='organization' type="text" placeholder="Organization" />
             <Input required={true} value={formData.email ?? ''} onChange={(e)=>handleChange(e)} name='email' type="email" placeholder="Email" />
             <Input required={true} value={formData.password ?? ''} onChange={(e)=>handleChange(e)} name='password' type="password" placeholder="Password" />
             <Button type="submit">Sign Up</Button>

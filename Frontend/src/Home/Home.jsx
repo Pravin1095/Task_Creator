@@ -12,7 +12,7 @@ import {
   TabButton,
  
 } from "./HomeV2.styles";
-import {CardLayout, Title, CheckBox, Description,} from "./Home.styles"
+import {CardLayout, Title, CheckBox, Description, UserName, HeaderLayout,} from "./Home.styles"
 import { useParams } from "react-router-dom";
 import Modal from "../common/Modal";
 import { GrEdit } from "react-icons/gr";
@@ -21,6 +21,7 @@ import { Link } from "react-router-dom";
 import { myContext } from "../ContextProvider/MyProvider";
 import { AuthContext } from "../common/AuthContext";
 import axios from 'axios'
+import { Button } from "../Auth/Auth.styles";
 
 const Home = () => {
   const [activeTab, setActiveTab] = useState("Tab1");
@@ -31,9 +32,16 @@ const Home = () => {
   // const [openModal, setOpenModal]=useState(false)
   const titleRef=useRef('')
   const descRef=useRef('')
+  const [openModal, setOpenModal] = useState(false);
+  const [modalTitle, setmodalTilte] = useState('');
+  const [primaryButtonText, setPrimaryButtonText] = useState('');
+  const [secondaryButtonText, setSecondaryButtonText] = useState('');
+  const [buttonName, setButtonName] = useState('');
+  const [deleteId, setDeleteId] = useState('');
 
-  const {openModal, updateModalState}=useContext(myContext)
+  // const {openModal, updateModalState}=useContext(myContext)
   const auth = useContext(AuthContext);
+  
 
   const url='http://localhost:8000/api/tasks'
 
@@ -163,13 +171,45 @@ console.error('Delete axios route', err)
     setIsEditId(id)
 };
 
+const handleLogoutButton = ()=>{
+  setOpenModal(true)
+  setmodalTilte("Are you sure you would like to Log Off?")
+  setPrimaryButtonText("Yes, Logout")
+  setSecondaryButtonText("Cancel")
+  setButtonName('logout')
+}
+
+const handleDeleteButton = (_id)=>{
+  setOpenModal(true)
+  setmodalTilte("Are you sure you would like to Delete the Task?")
+  setPrimaryButtonText("Yes, Delete")
+  setSecondaryButtonText("Cancel")
+  setButtonName('delete')
+  setDeleteId(_id)
+}
+
+const handlePrimaryButtonHandler = (buttonName, _id)=>{
+if(buttonName==='delete'){
+  handleDelete(_id)
+}
+else if(buttonName==='logout'){
+  auth.logout()
+}
+setOpenModal(false)
+}
+
+
+
   return (
     <>
-    {openModal && <Modal/>}
-      <header>
+   {openModal && <Modal isOpen={openModal} onClose={()=>setOpenModal(false)} title={modalTitle} primaryButtonText={primaryButtonText} secondaryButtonText={secondaryButtonText} primaryButtonHandler={()=>handlePrimaryButtonHandler(buttonName, deleteId)}  />}
+      <HeaderLayout>
+        <UserName>Welcome {auth.userName}</UserName>
         <h1>Task Creator</h1>
-      </header>
+        <Button onClick={()=>handleLogoutButton()}>Logout</Button>
+      </HeaderLayout>
       <BodyLayout>
+       
       <FormWrapper onSubmit={(e) => handleSubmit(e)}>
         {isEditId && <EditTitle>Edit your task</EditTitle>}
             <InputElement
@@ -225,7 +265,7 @@ console.error('Delete axios route', err)
             <span>
               <RiDeleteBin5Line />
             </span>
-            <Link color="white" onClick={()=>handleDelete(data._id)}>Delete</Link>
+            <Link color="white" onClick={()=>handleDeleteButton(data._id)}>Delete</Link>
           </div>
         </CardLayout>
       })  }

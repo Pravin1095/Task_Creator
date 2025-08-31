@@ -57,6 +57,14 @@ gap:50px;
 margin:10px 0;
 `
 
+export const HeaderLayout = styled.div`
+display : flex; 
+flex-direction : row;
+justify-content : space-evenly;
+`
+export const UserName = styled.div`
+
+`
 export const CardLayout=styled.div`
 display: grid;
 border:1px solid black;

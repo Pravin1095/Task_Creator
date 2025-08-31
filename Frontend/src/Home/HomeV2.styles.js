@@ -103,6 +103,7 @@ export const TabButton = styled.button`
 
 /* Body Layout */
 export const BodyLayout = styled.div`
+position : relative;
   display: flex;
   flex-direction: column;
   gap: 10px;

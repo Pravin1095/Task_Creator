@@ -6,7 +6,7 @@ const User = require('../mongoose-models/user_data');
 const authRouter = express.Router()
 
 authRouter.post('/',async(req, res)=>{
-const {isSignIn, userName, email, password} = req.body
+const {isSignIn, userName, email, password, organization} = req.body
 let token
 
 if(isSignIn){
@@ -20,7 +20,7 @@ if(isValidPassword){
     token = jwt.sign({userId : existingUser._id, email: existingUser.email},"secret_dont_share",{expiresIn: 
     '1hr'
 })
-    res.status(201).json({message : "Login Successful", userId : existingUser._id, token : token})
+    res.status(201).json({message : "Login Successful", userId : existingUser._id, token : token, userName : existingUser.name})
 }
 else{
     res.status(403).json({message : "Invalid password. Please try again"})
@@ -53,6 +53,7 @@ else{
         else{
             const newUser = new User({
                 name : userName,
+                organization : organization,
                 email : email,
                 password : hashedPassword
             })
@@ -60,7 +61,7 @@ else{
                token = jwt.sign({userId : newUser._id, email: newUser.email},"secret_dont_share",{expiresIn: 
     '1hr'
 })
-            res.status(201).json({message : "Registered successfully", userId : newUser._id, token: token})
+            res.status(201).json({message : "Registered successfully", userId : newUser._id, token: token, userName : newUser.name})
         }
     }
     catch(err){

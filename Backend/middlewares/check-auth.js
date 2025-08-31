@@ -5,7 +5,7 @@ module.exports= (req, res, next)=>{
         return next()
     }
 try{
-    console.log("check token", req )
+    console.log("check token", req?.headers['authorization'] )
     const authHeader = req?.headers['authorization'] //Authorization : 'Bearer' 'Token'
     if(!authHeader){
         throw new Error('Authorization Failed')
@@ -18,6 +18,7 @@ try{
     }
 }
 catch(err){
+    console.log("check auth error", err)
     res.status(401).json({message : 'Authentication Failed!'})
     return next(err)
 }

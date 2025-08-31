@@ -21,17 +21,21 @@ function App() {
   let logoutTimer;
 
   const [token, setToken] = useState('');
+  const [userName, setUserName] = useState('');
   const [tokenExpirationTime, setTokenExpirationTime] = useState('');
   const navigate = useNavigate();
-  const setLogin=useCallback((uid, token, expirationDateFromUseEffect)=>{
+
+
+  const setLogin=useCallback((uid, token, userName, expirationDateFromUseEffect)=>{
     try{
-      console.log("token inside login", token)
+      console.log("token inside login", token, userName, expirationDateFromUseEffect)
  setToken(token)
+ setUserName(userName);
     const expirationDate = expirationDateFromUseEffect || new Date(new Date().getTime() + 1000 * 60 * 60 )
     setTokenExpirationTime(expirationDate)
     console.log("expiration Date", expirationDateFromUseEffect, expirationDate, new Date(new Date().getTime + 1000 * 60 * 60))
     
-localStorage.setItem("userData", JSON.stringify({userId : uid , token : token,
+localStorage.setItem("userData", JSON.stringify({userId : uid , token : token, userName : userName,
    expiration : expirationDate.toISOString()
   }))
     }
@@ -50,8 +54,9 @@ navigate('/auth')
   },[])
 
   useEffect(()=>{
+    console.log("check autoLogout useEffect", tokenExpirationTime, token)
     if(token && tokenExpirationTime){
-const expirationTimeInMilliSeconds = tokenExpirationTime.getTime() - new Date().getTime()
+const expirationTimeInMilliSeconds = tokenExpirationTime?.getTime() - new Date().getTime()
 console.log("check time", expirationTimeInMilliSeconds)
 logoutTimer = setTimeout(setLogout, expirationTimeInMilliSeconds)
     }
@@ -63,16 +68,17 @@ logoutTimer = setTimeout(setLogout, expirationTimeInMilliSeconds)
 
   useEffect(()=>{
 const storedData = JSON.parse(localStorage.getItem('userData'))
+console.log("useEffect call check", storedData)
 if(storedData && storedData.token && new Date(storedData.expiration)>new Date()){
   console.log("check useEffect called");
-  setLogin(storedData.userId, storedData.token, new Date(storedData.expiration))
+  setLogin(storedData.userId, storedData.token, storedData.userName, new Date(storedData.expiration))
 }
   },[setLogin]) //When user refreshes the page we again retrieve the token from localStorage
 
   return (
  
     <div className="App">
-    <AuthContext.Provider value={{ token : token, login: setLogin, logout : setLogout}}>
+    <AuthContext.Provider value={{ userName : userName, token : token, login: setLogin, logout : setLogout}}>
 
       <Routes>
       
