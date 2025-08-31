@@ -1,13 +1,15 @@
 const express=require('express')
 const Task=require('../mongoose-models/task_data')
 const taskRouter=express.Router()
+const checkAuth = require('../middlewares/check-auth')
 
+taskRouter.use(checkAuth);
 
 taskRouter.post('/', async(req, res, next)=>{
-    const {title, description, isCompleted}=req.body
+    const {title, description, isCompleted, userId}=req.body
     try{
 const task=new Task({
-    title, description, isCompleted
+    title, description, isCompleted, userId
 })
 await task.save()
 res.status(200).json({message:"Successfully added"})
@@ -17,10 +19,19 @@ res.status(200).json({message:"Successfully added"})
     }
 })
 
-taskRouter.get('/', async(req, res)=>{
+taskRouter.get('/:id', async(req, res)=>{
+    const {id} = req.params
+    const {tab} = req.query
     try{
-const task=await Task.find()
-res.status(200).json(task)
+const task=await Task.find({userId : id})
+if(tab=='Tab1'){
+    const pendingTasks = task && task.filter((data)=>!data.isCompleted)
+    res.status(200).json(pendingTasks)
+}
+else{
+const completedTasks = task && task.filter((data)=>data.isCompleted)
+    res.status(200).json(completedTasks)
+}
     }
     catch(err){
         res.status(400).json({error:"Could not get data"})
@@ -29,11 +40,12 @@ res.status(200).json(task)
 
 taskRouter.patch('/:id',async(req, res)=>{
     const {id}=req.params
-    const {title, description}=req.body
+    const {title, description, isCompleted}=req.body
     try{
     const task=await Task.findByIdAndUpdate(id,{
         title: title,
-        description: description
+        description: description,
+        isCompleted : isCompleted
     })
     if(!task){
         res.status(403).json({error:"Could not find the id of the task"})

@@ -4,6 +4,7 @@ const bodyParser=require('body-parser')
 const cors = require('cors')
 const mongoose=require('mongoose')
 const taskRouter=require('./routes/taskRouter')
+const authRouter = require('./routes/authRouter')
 
 
 app.use(bodyParser.json());
@@ -23,6 +24,7 @@ app.use((req, res, next)=>{
 })
 
 app.use('/api/tasks', taskRouter)
+app.use('/api/users', authRouter)
 
 mongoose.connect(process.env.MONGODB_URI).then(()=>{
     console.log("Connection successful")
