@@ -48,6 +48,7 @@ border-bottom : ${(props)=>(props.isActive ? '2px solid black' : '' )};
 export const Tab=styled.div`
 display:flex;
 justify-content:space-evenly;
+margin : 10px;
 `
 
 export const BodyLayout=styled.div`
@@ -60,10 +61,45 @@ margin:10px 0;
 export const HeaderLayout = styled.div`
 display : flex; 
 flex-direction : row;
-justify-content : space-evenly;
+justify-content : space-between;
 `
-export const UserName = styled.div`
+export const UserNameWrapper = styled.div`
+display :flex;
+font-size : 24px;
+justify-content : center;
+align-items : center;
+font-family : Motiva-Sans;
+margin : 21px;
+font-weight : bold;
+`
 
+export const LogoutButton = styled.button`
+display : flex;
+gap : 2px;
+align-items : center;
+justify-content : center;
+border-radius : 50%;
+background : bisque;
+font-color : black;
+cursor : pointer;
+
+width : 10%;
+margin : 21px;
+
+&:hover{
+    background-color : white;
+}
+`
+
+export const LogoutSpan = styled.span`
+font-size : 16px;
+`
+
+export const UserName = styled.span`
+max-width : 300px;
+white-space : nowrap;
+text-overflow : ellipsis;
+overflow : hidden;
 `
 export const CardLayout=styled.div`
 display: grid;
@@ -74,6 +110,7 @@ grid-template-columns: 2fr 1fr;
 grid-gap:10px;
 font-size:24px;
 font-family: Motiva Sans;
+margin : 10px;
 `
 
 export const Title=styled.h3`

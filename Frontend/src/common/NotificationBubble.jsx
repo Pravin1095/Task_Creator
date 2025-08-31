@@ -1,12 +1,12 @@
 import React from "react";
-import { BubbleContainer, BubbleCount } from "./NotificationBubble.styles";
+import { BubbleCount, NotificationLayout } from "./NotificationBubble.styles";
 
-const NotificationBubble = ({ children}) => {
+const NotificationBubble = ({ textColor,width, children}) => {
  // no bubble if count is 0
 
   return (
     // <BubbleContainer>
-      <BubbleCount>{children}</BubbleCount>
+      <NotificationLayout><BubbleCount width={width} textColor={textColor}>{children}</BubbleCount></NotificationLayout>
     // </BubbleContainer>
   );
 };
