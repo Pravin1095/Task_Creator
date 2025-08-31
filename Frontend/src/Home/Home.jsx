@@ -51,7 +51,9 @@ const Home = () => {
   // const {openModal, updateModalState}=useContext(myContext)
   const auth = useContext(AuthContext);
 
-  const url = "http://localhost:8000/api/tasks";
+
+  const url=`${process.env.REACT_APP_API_URL}/api/tasks`
+
 
   const { userId } = useParams();
 
