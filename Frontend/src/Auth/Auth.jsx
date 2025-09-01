@@ -45,8 +45,8 @@ export default function AuthPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${url}`, formData);
       auth.showLoaderHandler(true);
+      const res = await axios.post(`${url}`, formData);  
       if (res.status === 201) {
         auth.login(res?.data?.userId, res?.data?.token, res?.data?.userName);
         navigate(`/home/${res?.data?.userId}`);

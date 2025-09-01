@@ -301,9 +301,9 @@ const Home = () => {
           </TabButton>
         </Tab>
         {taskData &&
-          taskData.map((data) => {
+          taskData.map((data, index) => {
             return (
-              <CardLayout>
+              <CardLayout key={index}>
                 <Title>{data.title}</Title>
                 <CheckBox>
                   <input
@@ -312,6 +312,7 @@ const Home = () => {
                     }}
                     type="checkbox"
                     id="completed"
+                    checked={activeTab === "Tab1" ? data.isCompleted : !data.isCompleted}
                     name={activeTab === "Tab1" ? "isCompleted" : "isPending"}
                   ></input>
                   <span>
