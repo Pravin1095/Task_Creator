@@ -17,7 +17,7 @@ if(existingUser){
 isValidPassword = await bcrypt.compare(password, existingUser.password)
 try{
 if(isValidPassword){
-    token = jwt.sign({userId : existingUser._id, email: existingUser.email},"secret_dont_share",{expiresIn: 
+    token = jwt.sign({userId : existingUser._id, email: existingUser.email},process.env.JWT_SECRET,{expiresIn: 
     '1hr'
 })
     res.status(201).json({message : "Login Successful", userId : existingUser._id, token : token, userName : existingUser.name})
@@ -58,7 +58,7 @@ else{
                 password : hashedPassword
             })
             await newUser.save()
-               token = jwt.sign({userId : newUser._id, email: newUser.email},"secret_dont_share",{expiresIn: 
+               token = jwt.sign({userId : newUser._id, email: newUser.email},process.env.JWT_SECRET,{expiresIn: 
     '1hr'
 })
             res.status(201).json({message : "Registered successfully", userId : newUser._id, token: token, userName : newUser.name})

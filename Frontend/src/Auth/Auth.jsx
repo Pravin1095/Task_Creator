@@ -23,7 +23,7 @@ export default function AuthPage() {
 
   const auth = useContext(AuthContext);
 
-  const url = "http://localhost:8000/api/users";
+  const url = `${process.env.REACT_APP_API_URL}/api/users`;
 
   const handleChange = (e) => {
     const { name, value } = e.target;

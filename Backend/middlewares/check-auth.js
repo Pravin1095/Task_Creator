@@ -12,7 +12,7 @@ try{
     }
     else{
         const token = authHeader.split(' ')[1];
-        const decodedToken = jwt.verify(token, 'secret_dont_share');
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
         req.userData = {userId : decodedToken.userId}
         next()
     }
