@@ -10,6 +10,17 @@ export const PageContainer = styled.div`
   background: linear-gradient(135deg, #0f0f0f, #1a1a1a, #111827);
   color: #fff;
 `;
+export const ForgotPasswordLayout = styled.div`
+display : flex;
+justify-content : center;
+align-items : center;
+margin-top : 10px;
+cursor : pointer;
+
+&:hover{
+  text-decoration : underline;
+}
+`
 
 export const Card = styled.div`
   width: 100%;
