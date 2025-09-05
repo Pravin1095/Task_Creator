@@ -29,7 +29,7 @@ app.use('/api/users', authRouter)
 
 mongoose.connect(process.env.MONGODB_URI).then(()=>{
     console.log("Connection successful")
-    app.listen(process.env.PORT  || 8000)
+    app.listen(process.env.PORT)
 }).catch(err=>{
     console.log('Mongoose connect err', err)
 })
