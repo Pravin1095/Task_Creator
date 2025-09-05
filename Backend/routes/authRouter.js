@@ -15,7 +15,7 @@ try{
   }
 else{
   // Generate token
-  const resetToken = jwt.sign({ id: user._id }, "secret_dont_share", { expiresIn: "15m" });
+  const resetToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "15m" });
 
   // Save token temporarily in DB
 
@@ -28,14 +28,14 @@ else{
   const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "taskcreator1.app@gmail.com",   // your Gmail address
-    pass: "ltnvsskagkoefgho"    // app password (not your Gmail login password!)
+    user: process.env.APP_GMAIL_ID,   // your Gmail address
+    pass: process.env.APP_PWD    // app password (not your Gmail login password!)
   }
 });
   await transporter.sendMail({
     to: email,
     subject: "Password Reset - Task Creator",
-    html: `<a href="http://localhost:3000/reset-password/${resetToken}">Click here to reset your password</a>`
+    html: `<a href="https://task-creator-opal.vercel.app/reset-password/${resetToken}">Click here to reset your password</a>`
   });
 
   res.status(201).json({ message: "Password reset link has been sent to your email", email : email });
@@ -54,7 +54,7 @@ authRouter.post('/reset-password', async(req, res)=>{
  const { token, newPassword } = req.body;
 
   try {
-    const decoded = jwt.verify(token, "secret_dont_share");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.id);
 
     if (!user || user.resetToken !== token || Date.now() > user.resetTokenExpiry) {
