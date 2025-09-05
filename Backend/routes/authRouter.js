@@ -35,10 +35,10 @@ else{
   await transporter.sendMail({
     to: email,
     subject: "Password Reset - Task Creator",
-    html: `<a href="https://task-creator-opal.vercel.app/reset-password/${resetToken}">Click here to reset your password</a>`
+    html: `<a href="http://localhost:3000/reset-password/${resetToken}">Click here to reset your password</a>`
   });
 
-  res.status(201).json({ message: "Reset link sent" });
+  res.status(201).json({ message: "Password reset link has been sent to your email", email : email });
 }
 
 }
@@ -51,7 +51,26 @@ res.status(400).json({error : err})
 
 
 authRouter.post('/reset-password', async(req, res)=>{
+ const { token, newPassword } = req.body;
 
+  try {
+    const decoded = jwt.verify(token, "secret_dont_share");
+    const user = await User.findById(decoded.id);
+
+    if (!user || user.resetToken !== token || Date.now() > user.resetTokenExpiry) {
+      return res.status(403).json({ message: "Invalid or expired token" });
+    }
+
+    user.password = await bcrypt.hash(newPassword, 12);
+    user.resetToken = undefined;
+    user.resetTokenExpiry = undefined;
+    await user.save();
+
+    res.status(201).json({ message: "Password reset successful" });
+  } catch (err) {
+    console.log("checl err", err)
+    res.status(400).json({ message: "Invalid or expired token" });
+  }
 })
 
 authRouter.post('/',async(req, res)=>{

@@ -12,6 +12,7 @@ import AuthPage from "./Auth/Auth";
 import Loader from "./common/Loader";
 import { AuthContext } from "./common/AuthContext";
 import { useCallback, useState } from "react";
+import ResetPassword from "./ResetPassword/ResetPassword";
 
 function App() {
   let logoutTimer;
@@ -100,6 +101,7 @@ function App() {
         <Routes>
           <Route path="/home/:userId" element={<Home />} />
           <Route path="/auth" element={<AuthPage />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
 
           <Route exact path="/" element={<Navigate to="/auth" />} />
           <Route

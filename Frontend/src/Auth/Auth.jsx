@@ -21,7 +21,8 @@ export default function AuthPage() {
   const [formData, setFormData] = useState({});
   const [errorMsg, setErrorMsg] = useState("");
   const [isForgetPassword, setIsForgetPassword] = useState('');
-  const [forgetPasswordMail, setForgetPasswordMail] = useState('')
+  const [forgetPasswordMail, setForgetPasswordMail] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
 
   const navigate = useNavigate();
 
@@ -46,6 +47,9 @@ export default function AuthPage() {
       auth.showLoaderHandler(true);
 const res = await axios.patch(`${url}/forgot-password`,{email : forgetPasswordMail} )
 console.log("check res", res)
+if(res.status===201){
+  setSuccessMsg(res.data.message)
+}
     }
     catch(err){
 console.log("Forgot password err", err)
@@ -85,8 +89,8 @@ auth.showLoaderHandler(false);
 
   return (
     <PageContainer>
-      {errorMsg && (
-        <NotificationBubble textColor="white">{errorMsg}</NotificationBubble>
+      {(errorMsg || successMsg) && (
+        <NotificationBubble borderColor={successMsg} textColor="white">{errorMsg || successMsg}</NotificationBubble>
       )}
       <Card>
         <Title>Task Creator</Title>

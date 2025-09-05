@@ -10,6 +10,17 @@ export const PageContainer = styled.div`
   background: linear-gradient(135deg, #0f0f0f, #1a1a1a, #111827);
   color: #fff;
 `;
+
+export const ResetPasswordLayout = styled.div`
+display : flex;
+gap : 6px;
+`
+export const TextLayout = styled.div`
+display : flex;
+align-items : center; 
+justify-content : center;
+`
+
 export const ForgotPasswordLayout = styled.div`
 display : flex;
 justify-content : center;
@@ -20,6 +31,7 @@ cursor : pointer;
 &:hover{
   text-decoration : underline;
 }
+
 `
 
 export const Card = styled.div`
@@ -54,7 +66,7 @@ export const Form = styled.form`
 export const Input = styled.input`
   padding: 0.75rem;
   border-radius: 8px;
-  border: 1px solid #333;
+  border: 1px solid ${(props)=>props.isReset ? "darkviolet" : "#333"};
   background: #1f1f1f;
   color: #fff;
   font-size: 0.95rem;
