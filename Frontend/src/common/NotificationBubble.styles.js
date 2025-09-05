@@ -14,7 +14,7 @@ export const BubbleCount = styled.span`
   min-width: 20px;
   height: 20px;
   padding: 10px 6px;
-  border : 3px solid #c00;
+  border : 3px solid ${(props)=>props.borderColor?.length>0 ? 'green' : 'red'};
 
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 `;

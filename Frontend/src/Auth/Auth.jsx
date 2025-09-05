@@ -10,6 +10,7 @@ import {
   Button,
   ToggleText,
   ToggleButton,
+  ForgotPasswordLayout,
 } from "./Auth.styles";
 import axios from "axios";
 import NotificationBubble from "../common/NotificationBubble";
@@ -19,6 +20,10 @@ export default function AuthPage() {
   const [isSignIn, setIsSignIn] = useState(true);
   const [formData, setFormData] = useState({});
   const [errorMsg, setErrorMsg] = useState("");
+  const [isForgetPassword, setIsForgetPassword] = useState('');
+  const [forgetPasswordMail, setForgetPasswordMail] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
+
   const navigate = useNavigate();
 
   const auth = useContext(AuthContext);
@@ -36,10 +41,29 @@ export default function AuthPage() {
     });
   };
 
+  const handleForgotPassword = async(e)=>{
+    e.preventDefault()
+    try{
+      auth.showLoaderHandler(true);
+const res = await axios.patch(`${url}/forgot-password`,{email : forgetPasswordMail} )
+console.log("check res", res)
+if(res.status===201){
+  setSuccessMsg(res.data.message)
+}
+    }
+    catch(err){
+console.log("Forgot password err", err)
+    }
+finally{
+auth.showLoaderHandler(false);
+}
+  }
+
   const handleRegisterToggle = () => {
     setIsSignIn(!isSignIn);
     setFormData({});
     setErrorMsg("");
+    setIsForgetPassword(false);
   };
 
   const handleSubmit = async (e) => {
@@ -65,13 +89,23 @@ export default function AuthPage() {
 
   return (
     <PageContainer>
-      {errorMsg && (
-        <NotificationBubble textColor="white">{errorMsg}</NotificationBubble>
+      {(errorMsg || successMsg) && (
+        <NotificationBubble borderColor={successMsg} textColor="white">{errorMsg || successMsg}</NotificationBubble>
       )}
       <Card>
         <Title>Task Creator</Title>
 
-        {isSignIn ? (
+        {isForgetPassword ? <Form onSubmit={(e) => handleForgotPassword(e)}>
+            <Input
+              required={true}
+              value={forgetPasswordMail ?? ""}
+              onChange={(e) => setForgetPasswordMail(e.target.value)}
+              name="email"
+              type="email"
+              placeholder="Please enter your registered email id"
+            />
+            <Button type="submit">Submit</Button>
+          </Form> : isSignIn ? (
           <Form onSubmit={(e) => handleSubmit(e)}>
             <Heading>Sign In</Heading>
             <Input
@@ -135,6 +169,7 @@ export default function AuthPage() {
           </Form>
         )}
 
+{!isForgetPassword && isSignIn && <ForgotPasswordLayout onClick={()=>setIsForgetPassword(true)}>Forgot password?</ForgotPasswordLayout>}
         <ToggleText>
           {isSignIn ? "Don't have an account?" : "Already have an account?"}{" "}
           <ToggleButton onClick={() => handleRegisterToggle()}>

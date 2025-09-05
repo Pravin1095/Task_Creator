@@ -1,9 +1,77 @@
 const express = require('express');
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer')
 
 const User = require('../mongoose-models/user_data');
 const authRouter = express.Router()
+
+authRouter.patch('/forgot-password', async(req, res)=>{
+const { email } = req.body;
+try{
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(403).json({ message: "The email id that you entered does not exist. Please register!" });
+  }
+else{
+  // Generate token
+  const resetToken = jwt.sign({ id: user._id }, "secret_dont_share", { expiresIn: "15m" });
+
+  // Save token temporarily in DB
+
+  user.resetToken = resetToken
+  user.resetTokenExpiry = Date.now() + 15 * 60 * 1000 
+
+  await user.save()
+
+  // Send email with reset link
+  const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "taskcreator1.app@gmail.com",   // your Gmail address
+    pass: "ltnvsskagkoefgho"    // app password (not your Gmail login password!)
+  }
+});
+  await transporter.sendMail({
+    to: email,
+    subject: "Password Reset - Task Creator",
+    html: `<a href="http://localhost:3000/reset-password/${resetToken}">Click here to reset your password</a>`
+  });
+
+  res.status(201).json({ message: "Password reset link has been sent to your email", email : email });
+}
+
+}
+catch(err){
+    console.log("check err ", err)
+res.status(400).json({error : err})
+}
+})
+
+
+
+authRouter.post('/reset-password', async(req, res)=>{
+ const { token, newPassword } = req.body;
+
+  try {
+    const decoded = jwt.verify(token, "secret_dont_share");
+    const user = await User.findById(decoded.id);
+
+    if (!user || user.resetToken !== token || Date.now() > user.resetTokenExpiry) {
+      return res.status(403).json({ message: "Invalid or expired token" });
+    }
+
+    user.password = await bcrypt.hash(newPassword, 12);
+    user.resetToken = undefined;
+    user.resetTokenExpiry = undefined;
+    await user.save();
+
+    res.status(201).json({ message: "Password reset successful" });
+  } catch (err) {
+    console.log("checl err", err)
+    res.status(400).json({ message: "Invalid or expired token" });
+  }
+})
 
 authRouter.post('/',async(req, res)=>{
 const {isSignIn, userName, email, password, organization} = req.body
