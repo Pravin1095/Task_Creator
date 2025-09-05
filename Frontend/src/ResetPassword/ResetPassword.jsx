@@ -16,7 +16,7 @@ const ResetPassword = ()=>{
 
     const {token} = useParams();
 
-      const url = `${process.env.REACT_APP_API_URL}api/users`;
+      const url = `${process.env.REACT_APP_API_URL}/api/users`;
 
       useEffect(()=>{
 return(()=>{
