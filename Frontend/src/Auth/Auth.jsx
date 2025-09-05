@@ -50,6 +50,9 @@ console.log("check res", res)
 if(res.status===201){
   setSuccessMsg(res.data.message)
 }
+else{
+  setErrorMsg(res.data.message)
+}
     }
     catch(err){
 console.log("Forgot password err", err)
