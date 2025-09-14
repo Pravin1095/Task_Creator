@@ -100,15 +100,16 @@ function App() {
       >
         <Routes>
           <Route path="/home/:userId" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-          <Route exact path="/" element={<Navigate to="/auth" />} />
+          {/* <Route exact path="/" element={<Navigate to="/home" />} />
           <Route
             path="/home/:userId"
             element={<Navigate to={token ? "/home/:userId" : "/auth"} />}
-          />
-          <Route path="*" element={<Navigate to="/" />} />
+          /> */}
+          <Route path="*" element={<Navigate to={token ? "/home/:userId" : "/home"} />} />
         </Routes>
       </AuthContext.Provider>
     </div>

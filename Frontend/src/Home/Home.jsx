@@ -19,7 +19,7 @@ import {
   UserNameWrapper,
   LogoutButton,
 } from "./Home.styles";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Modal from "../common/Modal";
 import { GrEdit } from "react-icons/gr";
 import { RiDeleteBin5Line } from "react-icons/ri";
@@ -28,7 +28,7 @@ import { myContext } from "../ContextProvider/MyProvider";
 import { AuthContext } from "../common/AuthContext";
 import axios from "axios";
 import { Button } from "../Auth/Auth.styles";
-import { LogOutIcon } from "lucide-react";
+import { LogOutIcon, LogInIcon } from "lucide-react";
 import NotificationBubble from "../common/NotificationBubble";
 
 const Home = () => {
@@ -50,6 +50,7 @@ const Home = () => {
 
   // const {openModal, updateModalState}=useContext(myContext)
   const auth = useContext(AuthContext);
+  const navigate = useNavigate();
 
 
   const url=`${process.env.REACT_APP_API_URL}/api/tasks`
@@ -96,6 +97,10 @@ const Home = () => {
     e.preventDefault();
     // titleRef.current=''
     // descRef.current=''
+    if(!auth.token){
+      setErrorMsg('Please Register or Sign in to add your tasks!')
+    }
+    else{
     try {
       auth.showLoaderHandler(true);
       if (isEditId) {
@@ -135,6 +140,7 @@ const Home = () => {
     } finally {
       auth.showLoaderHandler(false);
     }
+  }
   };
 
   const handleCompletedTasks = () => {
@@ -187,11 +193,17 @@ const Home = () => {
   };
 
   const handleLogoutButton = () => {
-    setOpenModal(true);
+    if(auth.token){
+setOpenModal(true);
     setmodalTilte("Are you sure you would like to Log Off?");
     setPrimaryButtonText("Yes, Logout");
     setSecondaryButtonText("Cancel");
     setButtonName("logout");
+    }
+    else{
+      navigate("/auth")
+    }
+    
   };
 
   const handleDeleteButton = (_id) => {
@@ -208,6 +220,7 @@ const Home = () => {
       handleDelete(_id);
     } else if (buttonName === "logout") {
       auth.logout();
+      navigate("/auth")
     }
     setOpenModal(false);
   };
@@ -233,7 +246,7 @@ const Home = () => {
   };
 
   const handleInvalid = () => {
-    setErrorMsg("Sorry! No special characters are allowed");
+    setErrorMsg(()=>{return auth.token ? "Sorry! No special characters are allowed" : "'Please Register or Sign in to add your tasks!'"});
   };
 
   return (
@@ -257,12 +270,12 @@ const Home = () => {
       )}
       <HeaderLayout>
         <UserNameWrapper>
-          <UserName>Welcome {auth.userName}</UserName>
+          {auth.userName && <UserName>Welcome {auth.userName}</UserName>}
         </UserNameWrapper>
         <h1>Task Creator</h1>
         <LogoutButton onClick={() => handleLogoutButton()}>
-          <LogOutIcon size={20} />
-          Logout
+          {auth.token ? <LogOutIcon size={20} /> : <LogInIcon size={20} />}
+          {auth.token ? "Logout" : "Login"}
         </LogoutButton>
       </HeaderLayout>
       <BodyLayout>
