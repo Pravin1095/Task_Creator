@@ -59,7 +59,10 @@ const Home = () => {
   const { userId } = useParams();
 
   useEffect(() => {
-    handleGetTaskData();
+    if(auth.token){
+handleGetTaskData();
+    }
+    
   }, [auth.token, activeTab]);
 
   const handleGetTaskData = async () => {
