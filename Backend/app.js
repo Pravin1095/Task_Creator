@@ -12,17 +12,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.use(cors({
-  origin: "https://task-creator-opal.vercel.app",  // your Vercel frontend
+  origin: "https://task-creator-opal.vercel.app",  
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   credentials: true
 }));
 
-app.use((req, res, next)=>{
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
-    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE')
-    next()
-})
+// app.use((req, res, next)=>{
+//     res.setHeader('Access-Control-Allow-Origin', '*');
+//     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
+//     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE')
+//     next()
+// })
 
 app.use('/api/tasks', taskRouter)
 app.use('/api/users', authRouter)
